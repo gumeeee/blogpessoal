@@ -1,4 +1,4 @@
-package com.generation.blogpessoal.model;
+﻿package com.generation.blogpessoal.model;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "tb_temas")
 public class Tema {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,7 +25,7 @@ public class Tema {
 	@NotNull(message = "O Atributo Descrição é obrigatório")
 	private String descricao;
 	
-	@OneToMany(fetch = FetchType.LAZY ,mappedBy = "tema", cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("tema")
 	private List<Postagem> postagem;
 
@@ -52,7 +52,5 @@ public class Tema {
 	public void setPostagem(List<Postagem> postagem) {
 		this.postagem = postagem;
 	}
-
-	
 
 }

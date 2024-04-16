@@ -1,4 +1,6 @@
-package com.generation.blogpessoal.security;
+﻿package com.generation.blogpessoal.security;
+
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.IOException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,19 +24,22 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException, java.io.IOException {
-		String authHeader = request.getHeader("Authorization");
-		String token = null;
-		String username = null;
-		
-		try{
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, 
+    		HttpServletResponse response, FilterChain filterChain) 
+    				throws ServletException, IOException {
+    	
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+    
+        try{
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7);
                 username = jwtService.extractUsername(token);
@@ -45,12 +49,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     
                 if (jwtService.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = 
+                    		new UsernamePasswordAuthenticationToken(userDetails, null, 
+                    				userDetails.getAuthorities());
+                    
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             
             }
+            
             filterChain.doFilter(request, response);
 
         }catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException 
@@ -58,7 +66,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return;
         }
-	}
-	
-	
+    }
 }
