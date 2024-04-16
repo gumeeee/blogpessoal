@@ -1,6 +1,7 @@
-package com.generation.blogpessoal.configuration;
+﻿package com.generation.blogpessoal.configuration;
 
 import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -14,21 +15,27 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 @Configuration
 public class SwaggerConfig {
 
-	public OpenAPI springBlogPessoalOpeanAPI() {
-		return new OpenAPI()
-				.info(new Info().title("Projeto Blog Pessoal").description("Projeto Blog Pessoal - Guilherme Moura")
-						.version("v0.0.1")
-						.license(new License().name("Generation Brasil").url("https://brazil.generation.org"))
-						.contact(new Contact().name("Guilherme Moura").url("https://github.com/gumeeee")
-								.email("gaxco123@gmail.com")))
-				.externalDocs(new ExternalDocumentation().description("Github").url("https://github.com/gumeeee"));
-	}
+	@Bean
+    OpenAPI springBlogPessoalOpenAPI() {
+        return new OpenAPI()
+            .info(new Info()
+                .title("Projeto Blog Pessoal")
+                .description("Projeto Blog Pessoal - Generation Brasil")
+                .version("v0.0.1")
+                .license(new License()
+                    .name("Generation Brasil")
+                    .url("https://brazil.generation.org/"))
+                .contact(new Contact()
+                    .name("Generation Brasil")
+                    .url("https://github.com/conteudoGeneration")
+                    .email("conteudogeneration@generation.org")))
+            .externalDocs(new ExternalDocumentation()
+                .description("Github")
+                .url("https://github.com/conteudoGeneration/"));
+    }
 
-	private ApiResponse createApiResponse(String message) {
 
-		return new ApiResponse().description(message);
-	}
-
+	@Bean
 	OpenApiCustomizer customerGlobalHeaderOpenApiCustomiser() {
 
 		return openApi -> {
@@ -49,4 +56,9 @@ public class SwaggerConfig {
 		};
 	}
 
+	private ApiResponse createApiResponse(String message) {
+
+		return new ApiResponse().description(message);
+
+	}
 }

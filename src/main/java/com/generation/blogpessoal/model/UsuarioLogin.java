@@ -1,7 +1,7 @@
-package com.generation.blogpessoal.model;
+﻿package com.generation.blogpessoal.model;
 
 public class UsuarioLogin {
-
+	
 	private Long id;
 	private String nome;
 	private String usuario;
